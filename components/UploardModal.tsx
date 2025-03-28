@@ -65,7 +65,6 @@ if(songError) {
     return toast.error('Failed song upload')
 }
 
-// Upload image
     const { data: imageData, error: imageError } = await supabaseClient.storage
       .from('images')
       .upload(`image-${values.title}-${uniqueID}`, imageFile, {

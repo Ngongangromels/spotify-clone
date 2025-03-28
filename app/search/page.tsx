@@ -10,7 +10,7 @@ import SearchContent from "./components/SearchContent"
     }
  }
 
-export const revalidates = 0;
+export const revalidate = 0;
 
  const Search = async ({ searchParams }: SearchProps) => {
     const songs = await getSongsByTitle(searchParams.title)
