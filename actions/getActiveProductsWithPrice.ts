@@ -19,7 +19,7 @@ const getActiveProductsWithPrice = async (): Promise<ProductWithPrice[]> => {
     console.log(error);
   }
 
-  return (data as any) || [];
+  return (data) || [];
 };
 
 export default getActiveProductsWithPrice
