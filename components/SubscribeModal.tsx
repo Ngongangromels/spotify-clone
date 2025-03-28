@@ -114,7 +114,7 @@ if(subscription) {
          isOpen={subscribeModal.isOpen}
          onChange={onChange}
         >
-            {products.length}
+            {products.length}{content}
         </Modal>
     )
 }
