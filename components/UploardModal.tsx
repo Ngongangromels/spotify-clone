@@ -99,7 +99,7 @@ if(songError) {
         reset()
         uploadModal.onClose()
     } catch (error) {
-    
+     console.log(error)
         toast.error("Somethimg went wrong")
     } finally {
         setIsLoading(false)

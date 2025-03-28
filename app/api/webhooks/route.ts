@@ -30,7 +30,6 @@ export async function POST(
     let event: Stripe.Event
     try {
         if(!sig || !webhookSecret) return ;
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         event = stripe.webhooks.constructEvent(body, sig, webhookSecret)
     } catch (error: any) {
          console.log('Error message: ' + error.message)
@@ -72,7 +71,7 @@ export async function POST(
                 default:
                     throw new Error('Unhandled relevent event!')
             }
-        } catch (error: any) {
+        } catch (error) {
             console.log(error);
             return new NextResponse('Webhook error', { status: 400 })
         }

@@ -1,5 +1,5 @@
  import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
- import { headers, cookies } from "next/headers";
+ import { cookies } from "next/headers";
  import { NextResponse } from "next/server";
 
  import { stripe } from "@/libs/stripe";
@@ -44,7 +44,7 @@
         })
 
         return NextResponse.json({ sessionId: session.id })
-    } catch (error: any) {
+    } catch (error) {
          console.log(error)
          return new NextResponse('Internal Error', { status: 500 })
     } 
