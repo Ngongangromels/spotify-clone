@@ -24,7 +24,7 @@ export async function POST(
     request: Request
 ) {
     const body = await request.text()
-    const sig = (await headers()).get('Stripe-Signature')
+    const sig = headers().get('Stripe-Signature')
 
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
     let event: Stripe.Event
@@ -50,7 +50,7 @@ export async function POST(
                 case 'customer.subscription.created':
                 case 'customer.subscription.updated':
                 case 'customer.subscription.deleted':
-                    const subscription = event.data.object as unknown as Stripe.Subscription;
+                    const subscription = event.data.object as Stripe.Subscription;
                     await manageSubscriptionStatusChange(
                       subscription.id,
                       subscription.customer as string,

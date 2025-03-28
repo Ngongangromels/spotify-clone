@@ -70,7 +70,9 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
             No products available
         </div>
     )
+    console.log(products.length)
 if(products.length) {
+
     content = (
         <div>
             {products.map((product) => {
@@ -108,11 +110,11 @@ if(subscription) {
     return (
         <Modal 
          title="Only for prmiun users"
-         description="Listen to music with spotify Prmiun"
+         description="Listen to music with spotify Premiun"
          isOpen={subscribeModal.isOpen}
          onChange={onChange}
         >
-            {content}
+            {products.length}
         </Modal>
     )
 }

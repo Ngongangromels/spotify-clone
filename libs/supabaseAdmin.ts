@@ -104,8 +104,7 @@ const copyBillingDetailsToCustomer = async (
     const { name, phone, address } = payment_method.billing_details;
     if(!name || !phone || !address) return
      
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
+    // @ts-ignore
     await stripe.customers.update(customer, { name, phone, address });
     const { error } = await supabaseAdmin
       .from('users')
@@ -133,7 +132,7 @@ const manageSubscriptionStatusChange = async (
 
      const { id: uuid } = customerData!
 
-     const Subscription = await stripe.subscriptions.retrieve(
+     const subscription = await stripe.subscriptions.retrieve(
         subscriptionId,
         {
             expand: ["default_payment_method"]
@@ -142,36 +141,23 @@ const manageSubscriptionStatusChange = async (
 
      const subscriptionData: Database["public"]["Tables"]["subscriptions"]["Insert"] =
        {
-         id: Subscription.id,
+         id: subscription.id,
          user_id: uuid,
-         metadata: Subscription.metadata,
-         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-         // @ts-expect-error
-         status: Subscription.status,
-         price_id: Subscription.items.data[0].price.id,
-         cancel_at_period_end: Subscription.cancel_at_period_end,
-         cancel_at: Subscription.cancel_at
-           ? toDateTime(Subscription.cancel_at).toISOString()
-           : null,
-         canceled_at: Subscription.canceled_at
-           ? toDateTime(Subscription.canceled_at).toISOString()
-           : null,
-         current_period_start: toDateTime(
-           Subscription.current_period_start
-         ).toISOString(),
-         current_period_end: toDateTime(
-           Subscription.current_period_end
-         ).toISOString(),
-         created: toDateTime(Subscription.created).toISOString(),
-         ended_at: Subscription.ended_at
-           ? toDateTime(Subscription.ended_at).toISOString()
-           : null,
-         trial_start: Subscription.trial_start
-           ? toDateTime(Subscription.trial_start).toISOString()
-           : null,
-         trial_end: Subscription.trial_end
-           ? toDateTime(Subscription.trial_end).toISOString()
-           : null,
+         metadata: subscription.metadata,
+         // @ts-ignore
+         status: subscription.status,
+         price_id: subscription.items.data[0].price.id,
+         // @ts-ignore
+         quantity: subscription.quantity,
+         cancel_at_period_end: subscription.cancel_at_period_end,
+         cancel_at: subscription.cancel_at ? toDateTime(subscription.cancel_at).toISOString() : null,
+         canceled_at: subscription.canceled_at? toDateTime(subscription.canceled_at).toISOString(): null,
+         current_period_start: toDateTime(subscription.current_period_start).toISOString(),
+         current_period_end: toDateTime(subscription.current_period_end).toISOString(),
+         created: toDateTime(subscription.created).toISOString(),
+         ended_at: subscription.ended_at ? toDateTime(subscription.ended_at).toISOString() : null,
+         trial_start: subscription.trial_start ? toDateTime(subscription.trial_start).toISOString(): null,
+         trial_end: subscription.trial_end ? toDateTime(subscription.trial_end).toISOString() : null,
        };
 
        const { error } = await supabaseAdmin 
@@ -180,12 +166,12 @@ const manageSubscriptionStatusChange = async (
 
          if(error) throw error;
 
-         console.log(`Inserted / Updated subscription [${Subscription.id} for ${uuid}]`)
+         console.log(`Inserted / Updated subscription [${subscription.id} for ${uuid}]`)
 
-        if(createAction && Subscription.default_payment_method && uuid) {
+        if(createAction && subscription.default_payment_method && uuid) {
             await copyBillingDetailsToCustomer(
                 uuid,
-                Subscription.default_payment_method as Stripe.PaymentMethod
+                subscription.default_payment_method as Stripe.PaymentMethod
             )
         }
 }
